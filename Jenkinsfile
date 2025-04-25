@@ -38,6 +38,7 @@ pipeline {
             steps {
                 bat '''
                     docker-compose down || true
+                    docker rm -f backend_app || true
                     docker-compose pull
                     docker-compose up -d --build
                 '''
