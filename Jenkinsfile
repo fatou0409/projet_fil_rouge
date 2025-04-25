@@ -3,9 +3,9 @@ pipeline {
 
     environment {
         DOCKER_USER = 'fatou0409'
-        BACKEND_IMAGE = "${DOCKER_USER}/backend_app"
-        FRONTEND_IMAGE = "${DOCKER_USER}/frontend_app"
-        MIGRATE_IMAGE = "${DOCKER_USER}/migrate-1"
+        BACKEND_IMAGE = "${DOCKER_USER}/profilapp-backend"
+        FRONTEND_IMAGE = "${DOCKER_USER}/profilapp-frontend"
+        MIGRATE_IMAGE = "${DOCKER_USER}/profilapp-migrate"
     }
 
     stages {
