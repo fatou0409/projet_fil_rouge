@@ -15,20 +15,21 @@ pipeline {
                     url: 'https://github.com/fatou0409/projet_fil_rouge.git'
             }
         }
+
         stage('Build des images') {
             steps {
-                bat 'docker build -t $BACKEND_IMAGE:latest ./Backend-main/odc'
-                bat 'docker build -t $FRONTEND_IMAGE:latest ./Frontend-main'
-                bat 'docker build -t $MIGRATE_IMAGE:latest ./Backend-main/odc'
+                bat 'docker build -t %BACKEND_IMAGE%:latest ./Backend-main/odc'
+                bat 'docker build -t %FRONTEND_IMAGE%:latest ./Frontend-main'
+                bat 'docker build -t %MIGRATE_IMAGE%:latest ./Backend-main/odc'
             }
         }
 
         stage('Push des images sur Docker Hub') {
             steps {
                 withDockerRegistry([credentialsId: 'jenk', url: '']) {
-                    bat 'docker push $BACKEND_IMAGE:latest'
-                    bat 'docker push $FRONTEND_IMAGE:latest'
-                    bat 'docker push $MIGRATE_IMAGE:latest'
+                    bat 'docker push %BACKEND_IMAGE%:latest'
+                    bat 'docker push %FRONTEND_IMAGE%:latest'
+                    bat 'docker push %MIGRATE_IMAGE%:latest'
                 }
             }
         }
@@ -43,6 +44,4 @@ pipeline {
             }
         }
     }
-
-        }
 }
