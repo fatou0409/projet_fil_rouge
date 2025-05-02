@@ -7,7 +7,7 @@ pipeline {
         FRONTEND_IMAGE = "${DOCKER_USER}/profilapp-frontend"
         MIGRATE_IMAGE = "${DOCKER_USER}/profilapp-migrate"
         SONARQUBE_URL = "http://localhost:9000"
-        SONARQUBE_TOKEN = credentials('fafa') // ID du token dans Jenkins > Credentials
+        SONARQUBE_TOKEN = credentials('fafa') // ID du token Jenkins
     }
 
     stages {
@@ -30,20 +30,14 @@ pipeline {
             steps {
                 dir("Backend-main/odc") {
                     echo "Analyse SonarQube du backend..."
-                    withSonarQubeEnv("SonarQube") {
-                        withEnv(["SONAR_TOKEN=${SONARQUBE_TOKEN}"]) {
-                            script {
-                                // Récupérer le chemin complet du SonarScanner
-                                def scannerHome = tool name: "SonarScanner2", type: "ToolType"
-                                
-                                // Exécuter le scanner avec le chemin absolu
-                                bat """
-                                    "${scannerHome}\\bin\\sonar-scanner" ^
-                                    -Dsonar.token=%SONAR_TOKEN% ^
-                                    -Dsonar.host.url=${SONARQUBE_URL}
-                                """
-                            }
-                        }
+                    withEnv(["SONAR_TOKEN=${SONARQUBE_TOKEN}"]) {
+                        bat '''
+                            sonar-scanner ^
+                              -Dsonar.projectKey=backend ^
+                              -Dsonar.sources=. ^
+                              -Dsonar.host.url=%SONARQUBE_URL% ^
+                              -Dsonar.login=%SONAR_TOKEN%
+                        '''
                     }
                 }
             }
@@ -53,20 +47,14 @@ pipeline {
             steps {
                 dir("Frontend-main") {
                     echo "Analyse SonarQube du frontend..."
-                    withSonarQubeEnv("SonarQube") {
-                        withEnv(["SONAR_TOKEN=${SONARQUBE_TOKEN}"]) {
-                            script {
-                                // Récupérer le chemin complet du SonarScanner pour le frontend
-                                def scannerHome = tool name: "SonarScanner2", type: "ToolType"
-                                
-                                // Exécuter le scanner avec le chemin absolu
-                                bat """
-                                    "${scannerHome}\\bin\\sonar-scanner" ^
-                                    -Dsonar.token=%SONAR_TOKEN% ^
-                                    -Dsonar.host.url=${SONARQUBE_URL}
-                                """
-                            }
-                        }
+                    withEnv(["SONAR_TOKEN=${SONARQUBE_TOKEN}"]) {
+                        bat '''
+                            sonar-scanner ^
+                              -Dsonar.projectKey=frontend ^
+                              -Dsonar.sources=. ^
+                              -Dsonar.host.url=%SONARQUBE_URL% ^
+                              -Dsonar.login=%SONAR_TOKEN%
+                        '''
                     }
                 }
             }
