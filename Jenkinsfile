@@ -5,7 +5,9 @@ pipeline {
         DOCKER_USER = 'fatou0409'
         BACKEND_IMAGE = "${DOCKER_USER}/profilapp-backend"
         FRONTEND_IMAGE = "${DOCKER_USER}/profilapp-frontend"
-        MIGRATE_IMAGE = "${DOCKER_USER}/profilapp-migrate"
+        MIGRATE_IMAGE = "${DOCKER_USER}/profilapp-migrate" 
+        SONARQUBE_URL = "http://localhost:9000"
+        SONARQUBE_TOKEN = credentials("tok")
     }
 
     stages {
@@ -23,6 +25,31 @@ pipeline {
                 bat 'docker build -t %MIGRATE_IMAGE%:latest ./Backend-main/odc'
             }
         }
+        stage("Sonarqube analysis for Backend"){
+            agent any
+            steps {
+                dir("Backend-main/odc") {
+                    echo "Analyse SonarQube du backend..."
+                    withSonarQubeEnv("SonarQube") {
+                        bat "${tool "SonarScanner"}/bin/sonar-scanner -Dsonar.token=$SONARQUBE_TOKEN -Dsonar.host.url=$SONARQUBE_URL"
+                    }
+                }
+            }
+        }
+
+
+        stage("Sonarqube analysis for Frontend"){
+            agent any
+            steps {
+                dir("Frontend-main") {
+                    echo "Analyse SonarQube du Frontend..."
+                    withSonarQubeEnv("SonarQube") {
+                        bat "${tool "SonarScanner"}/bin/sonar-scanner -Dsonar.token=$SONARQUBE_TOKEN -Dsonar.host.url=$SONARQUBE_URL"
+                    }
+                }
+            }
+        }
+
 
         stage('Push des images sur Docker Hub') {
             steps {
