@@ -32,11 +32,17 @@ pipeline {
                     echo "Analyse SonarQube du backend..."
                     withSonarQubeEnv("SonarQube") {
                         withEnv(["SONAR_TOKEN=${SONARQUBE_TOKEN}"]) {
-                            bat '''
-                                ${tool "SonarScanner"}\\bin\\sonar-scanner ^
-                                -Dsonar.token=%SONAR_TOKEN% ^
-                                -Dsonar.host.url=${SONARQUBE_URL}
-                            '''
+                            script {
+                                // Récupérer le chemin complet du SonarScanner
+                                def scannerHome = tool name: "SonarScanner", type: "ToolType"
+                                
+                                // Exécuter le scanner avec le chemin absolu
+                                bat """
+                                    "${scannerHome}\\bin\\sonar-scanner" ^
+                                    -Dsonar.token=%SONAR_TOKEN% ^
+                                    -Dsonar.host.url=${SONARQUBE_URL}
+                                """
+                            }
                         }
                     }
                 }
@@ -49,11 +55,17 @@ pipeline {
                     echo "Analyse SonarQube du frontend..."
                     withSonarQubeEnv("SonarQube") {
                         withEnv(["SONAR_TOKEN=${SONARQUBE_TOKEN}"]) {
-                            bat '''
-                                ${tool "SonarScanner"}\\bin\\sonar-scanner ^
-                                -Dsonar.token=%SONAR_TOKEN% ^
-                                -Dsonar.host.url=${SONARQUBE_URL}
-                            '''
+                            script {
+                                // Récupérer le chemin complet du SonarScanner pour le frontend
+                                def scannerHome = tool name: "SonarScanner", type: "ToolType"
+                                
+                                // Exécuter le scanner avec le chemin absolu
+                                bat """
+                                    "${scannerHome}\\bin\\sonar-scanner" ^
+                                    -Dsonar.token=%SONAR_TOKEN% ^
+                                    -Dsonar.host.url=${SONARQUBE_URL}
+                                """
+                            }
                         }
                     }
                 }
