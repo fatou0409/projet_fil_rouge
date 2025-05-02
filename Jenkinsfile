@@ -7,7 +7,6 @@ pipeline {
         FRONTEND_IMAGE = "${DOCKER_USER}/profilapp-frontend"
         MIGRATE_IMAGE = "${DOCKER_USER}/profilapp-migrate"
         SONARQUBE_URL = "http://localhost:9000"
-        SONAR_SCANNER_PATH = "C:\\Users\\hp\\Desktop\\SonarScanner\\sonar-scanner\\bin\\sonar-scanner.bat"
         SONARQUBE_TOKEN = credentials('fafa') // ID du token Jenkins
     }
 
@@ -32,13 +31,13 @@ pipeline {
                 dir("Backend-main/odc") {
                     echo "Analyse SonarQube du backend..."
                     withEnv(["SONAR_TOKEN=${SONARQUBE_TOKEN}"]) {
-                        bat """
-                            %SONAR_SCANNER_PATH% ^
+                        bat '''
+                            "C:\\Users\\hp\\Desktop\\SonarScanner\\sonar-scanner\\bin\\sonar-scanner.bat" ^
                               -Dsonar.projectKey=backend ^
                               -Dsonar.sources=. ^
                               -Dsonar.host.url=%SONARQUBE_URL% ^
                               -Dsonar.login=%SONAR_TOKEN%
-                        """
+                        '''
                     }
                 }
             }
@@ -49,13 +48,13 @@ pipeline {
                 dir("Frontend-main") {
                     echo "Analyse SonarQube du frontend..."
                     withEnv(["SONAR_TOKEN=${SONARQUBE_TOKEN}"]) {
-                        bat """
-                            %SONAR_SCANNER_PATH% ^
+                        bat '''
+                            "C:\\Users\\hp\\Desktop\\SonarScanner\\sonar-scanner\\bin\\sonar-scanner.bat" ^
                               -Dsonar.projectKey=frontend ^
                               -Dsonar.sources=. ^
                               -Dsonar.host.url=%SONARQUBE_URL% ^
                               -Dsonar.login=%SONAR_TOKEN%
-                        """
+                        '''
                     }
                 }
             }
