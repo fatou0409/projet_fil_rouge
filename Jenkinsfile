@@ -7,7 +7,7 @@ pipeline {
         FRONTEND_IMAGE = "${DOCKER_USER}/profilapp-frontend"
         MIGRATE_IMAGE = "${DOCKER_USER}/profilapp-migrate"
         SONARQUBE_URL = "http://localhost:9000"
-        SONARQUBE_TOKEN = credentials("tok") // ID du token dans Jenkins > Credentials
+        SONARQUBE_TOKEN = credentials('toktok') // ID du token dans Jenkins > Credentials
     }
 
     stages {
