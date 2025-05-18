@@ -8,7 +8,7 @@ pipeline {
         MIGRATE_IMAGE = "${DOCKER_USER}/profilapp-migrate"
         SONARQUBE_URL = "http://localhost:9000"
         SONARQUBE_TOKEN = credentials('fafa')
-        KUBECONFIG = credentials('kubeconfig')
+        // KUBECONFIG n'est pas utilisé ici, on utilisera KUBECONFIG_FILE via withCredentials
     }
 
     stages {
@@ -77,7 +77,7 @@ pipeline {
                         dir('terraform') {
                             bat 'dir *.tf'
                             bat '"C:\\Users\\hp\\Desktop\\terraform_1.11.4_windows_amd64\\terraform.exe" init'
-                            bat '"C:\\Users\\hp\\Desktop\\terraform_1.11.4_windows_amd64\\terraform.exe" plan -out=tfplan'
+                            bat "\"C:\\Users\\hp\\Desktop\\terraform_1.11.4_windows_amd64\\terraform.exe\" plan -out=tfplan -var kubeconfig=%KUBECONFIG_FILE%"
                             bat '"C:\\Users\\hp\\Desktop\\terraform_1.11.4_windows_amd64\\terraform.exe" apply -auto-approve tfplan'
                         }
                     }
