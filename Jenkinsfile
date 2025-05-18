@@ -15,7 +15,6 @@ pipeline {
         stage('Cloner le dépôt') {
             steps {
                 git branch: 'main', url: 'https://github.com/fatou0409/projet_fil_rouge.git'
-
             }
         }
 
@@ -76,20 +75,10 @@ pipeline {
                 withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG_FILE')]) {
                     withEnv(["KUBECONFIG=%KUBECONFIG_FILE%"]) {
                         dir('terraform') {
-                            // Liste les fichiers .tf pour vérifier qu'ils sont bien présents
                             bat 'dir *.tf'
-
-                            // On lance init, plan et apply seulement s’il y a des fichiers .tf
-                            bat '''
-                                if exist *.tf (
-                                    "C:\\Users\\hp\\Desktop\\terraform_1.11.4_windows_amd64\\terraform.exe" init
-                                    "C:\\Users\\hp\\Desktop\\terraform_1.11.4_windows_amd64\\terraform.exe" plan -out=tfplan
-                                    "C:\\Users\\hp\\Desktop\\terraform_1.11.4_windows_amd64\\terraform.exe" apply -auto-approve tfplan
-                                ) else (
-                                    echo Aucun fichier Terraform (*.tf) trouvé, deployment annulé.
-                                    exit 1
-                                )
-                            '''
+                            bat '"C:\\Users\\hp\\Desktop\\terraform_1.11.4_windows_amd64\\terraform.exe" init'
+                            bat '"C:\\Users\\hp\\Desktop\\terraform_1.11.4_windows_amd64\\terraform.exe" plan -out=tfplan'
+                            bat '"C:\\Users\\hp\\Desktop\\terraform_1.11.4_windows_amd64\\terraform.exe" apply -auto-approve tfplan'
                         }
                     }
                 }
